@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalle de Trámite - Municipalidad de Yau</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-50 font-sans text-gray-800 min-h-screen p-4 sm:p-6 md:p-8">
+    <div class="max-w-4xl mx-auto">
+        <header class="bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-2xl shadow-xl mb-8 p-6">
+            <div class="flex justify-between items-center">
+                <div>
+                    <h1 class="text-2xl sm:text-3xl font-bold">Detalle del Trámite #{{ tramite.id }}</h1>
+                    <p class="text-blue-100">{{ tramite.tipo }}</p>
+                </div>
+                <a href="/" class="bg-white text-blue-600 px-4 py-2 rounded-lg hover:bg-blue-50 transition">
+                    <i class="fas fa-arrow-left mr-2"></i>Volver
+                </a>
+            </div>
+        </header>
+
+        <div class="bg-white rounded-2xl shadow-xl overflow-hidden mb-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 p-6">
+                <div>
+                    <h2 class="text-xl font-semibold mb-4 text-gray-700 border-b pb-2">Información Básica</h2>
+                    <div class="space-y-4">
+                        <div>
+                            <p class="text-sm text-gray-500">Tipo de Trámite</p>
+                            <p class="font-medium">{{ tramite.tipo }}</p>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-500">Fecha de Inicio</p>
+                            <p class="font-medium">{{ tramite.fecha_inicio }}</p>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-500">Tiempo Estimado</p>
+                            <p class="font-medium">{{ tramite.tiempo_procesamiento }} días</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div>
+                    <h2 class="text-xl font-semibold mb-4 text-gray-700 border-b pb-2">Estado y Prioridad</h2>
+                    <div class="space-y-4">
+                        <div>
+                            <p class="text-sm text-gray-500">Estado Actual</p>
+                            <span class="px-3 py-1 rounded-full text-sm font-medium 
+                                {% if tramite.estado == 'Completado' %}bg-green-100 text-green-800
+                                {% elif tramite.estado == 'En Proceso' %}bg-blue-100 text-blue-800
+                                {% else %}bg-yellow-100 text-yellow-800{% endif %}">
+                                {{ tramite.estado }}
+                            </span>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-500">Prioridad</p>
+                            <span class="px-3 py-1 rounded-full text-sm font-medium 
+                                {% if tramite.prioridad == 'Alta' %}bg-red-100 text-red-800
+                                {% elif tramite.prioridad == 'Media' %}bg-orange-100 text-orange-800
+                                {% else %}bg-green-100 text-green-800{% endif %}">
+                                {{ tramite.prioridad }}
+                            </span>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-500">Fecha de Actualización</p>
+                            <p class="font-medium">{{ tramite.fecha_actualizacion }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="border-t p-6">
+                <h2 class="text-xl font-semibold mb-4 text-gray-700">Solicitante</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <p class="text-sm text-gray-500">Email</p>
+                        <p class="font-medium">{{ tramite.ciudadano_email }}</p>
+                    </div>
+                    {% if ciudadano %}
+                    <div>
+                        <p class="text-sm text-gray-500">Nombre</p>
+                        <p class="font-medium">{{ ciudadano.nombre }}</p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-500">Teléfono</p>
+                        <p class="font-medium">{{ ciudadano.telefono or 'No registrado' }}</p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-500">Dirección</p>
+                        <p class="font-medium">{{ ciudadano.direccion or 'No registrada' }}</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="border-t p-6 bg-gray-50">
+                <h2 class="text-xl font-semibold mb-4 text-gray-700">Historial de Actualizaciones</h2>
+                {% if historial %}
+                <div class="space-y-4">
+                    {% for item in historial %}
+                    <div class="border-l-4 border-blue-500 pl-4 py-2">
+                        <p class="font-medium">{{ item.estado }}</p>
+                        <p class="text-sm text-gray-500">{{ item.fecha }}</p>
+                        {% if item.observaciones %}
+                        <p class="text-sm mt-1">{{ item.observaciones }}</p>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <p class="text-gray-500">No hay historial registrado</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</body>
+</html>
